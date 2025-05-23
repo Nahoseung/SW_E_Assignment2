@@ -1,0 +1,5 @@
+#  objects file
+*.o
+
+# setting file
+.vscode/
