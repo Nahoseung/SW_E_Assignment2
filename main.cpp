@@ -23,6 +23,26 @@ ifstream in_fp;
 
 /************* CLASS FUNCTIONS ***************/
 
+    /*회원 가입*/
+void SignUp::signup()
+{
+    mem_info usr_info;
+        
+    usr_info = UI.get_mem_info();
+    member_manager.Add_New_Member(usr_info.name,usr_info.pwd,usr_info.digit);
+
+    cout << usr_info.name << usr_info.pwd << usr_info.digit<<endl;
+    out_fp << usr_info.name << " " << usr_info.pwd << " " << usr_info.digit << endl;
+}
+
+mem_info SignUpUI::get_mem_info()
+{
+    mem_info usr_info;
+    in_fp >> usr_info.name >> usr_info.pwd >> usr_info.digit;
+
+    return usr_info;
+}
+
 void Member_manager::Add_New_Member(string name,string pwd,string digit)
 {
     Customer New_mem(name,pwd,digit);
@@ -33,30 +53,36 @@ void Member_manager::Add_New_Member(string name,string pwd,string digit)
 }
 
 
-info SignUpUI::get_info()
+    /*자전거 등록*/
+void Register::regist()
 {
-    info usr_info;
-    in_fp >> usr_info.name >> usr_info.pwd >> usr_info.digit;
+    bicycle_info b_info;
+    b_info = UI.get_bicycle_info();
+    bicycle_manager.Add_New_Bicycle(b_info.ID, b_info.name);
 
-    return usr_info;
+    cout << b_info.ID << b_info.name <<endl;
+    out_fp << b_info.ID << " "<< b_info.name << endl;
+}
+
+bicycle_info RegisterUI::get_bicycle_info()
+{
+    bicycle_info b_info;
+    in_fp >> b_info.ID >> b_info.name;
+
+    return b_info;
+}
+
+void Bicycle_manager::Add_New_Bicycle(string ID,string name)
+{
+    Bicycle New_B(ID,name);
+    if(num_of_Bicycle<50)
+    {
+        this->bicycle_list[this->num_of_Bicycle++] = New_B;
+    }
 }
 
 
-void SignUp::signup()
-{
-    info usr_info;
-        
-    usr_info = UI.get_info();
-    member_manager.Add_New_Member(usr_info.name,usr_info.pwd,usr_info.digit);
-
-    cout << usr_info.name << usr_info.pwd << usr_info.digit<<endl;
-    out_fp << usr_info.name << " " << usr_info.pwd << " " << usr_info.digit << endl;
-}
-
-
-
-
-/************** MAIN *********************/
+/****************** MAIN *********************/
 int main()
 {
     in_fp.open(INPUT_FILE_NAME);
@@ -86,6 +112,7 @@ void doTask()
     /************** Instances *****************/
     SignUp signup_instance;
     Member_manager mem_manager_instacne;
+    Register registe_instance;
 
     int menu_level_1 =0 , menu_level_2 =0;
     int is_program_exit = 0;
@@ -109,6 +136,7 @@ void doTask()
                         break;
                     }
                 } // * switch(menu_level_2)
+                break;
             } // * case 1
 
             case 2:
@@ -138,10 +166,11 @@ void doTask()
                     case 1:
                     {
                         /* 자전거 등록 */
-
+                        registe_instance.regist();
                         break;
                     }
                 } // * switch(menu_level_2)
+                break;
             } // * case 3
 
             case 4:
