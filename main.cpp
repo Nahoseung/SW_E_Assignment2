@@ -1,13 +1,18 @@
-#include <iostream>
-#include <string>
-#include <fstream>
+#include "class.h"
 
 #define MAX_STRING 32
-#define INPUT_FILE_NAME "intput.txt"
-#define OUTPUT_FILE_NAME "output.txt"
+#define test 1
+
+#if test
+#define INPUT_FILE_NAME "txt/test_input.txt"
+#define OUTPUT_FILE_NAME "txt/test_output.txt"
+
+#else
+#define INPUT_FILE_NAME "txt/intput.txt"
+#define OUTPUT_FILE_NAME "txt/output.txt"
+#endif
 
 
-using namespace std;
 
 void doTask();
 void join();
@@ -16,11 +21,56 @@ void program_exit();
 ofstream out_fp;
 ifstream in_fp;
 
+/************* CLASS FUNCTIONS ***************/
 
+void Member_manager::Add_New_Member(string name,string pwd,string digit)
+{
+    Customer New_mem(name,pwd,digit);
+    if(num_of_memebr<10)
+    {
+        this->member_list[this->num_of_memebr++] = New_mem;
+    }      
+}
+
+
+info SignUpUI::get_info()
+{
+    info usr_info;
+    in_fp >> usr_info.name >> usr_info.pwd >> usr_info.digit;
+
+    return usr_info;
+}
+
+
+void SignUp::signup()
+{
+    info usr_info;
+        
+    usr_info = UI.get_info();
+    member_manager.Add_New_Member(usr_info.name,usr_info.pwd,usr_info.digit);
+
+    cout << usr_info.name << usr_info.pwd << usr_info.digit<<endl;
+    out_fp << usr_info.name << " " << usr_info.pwd << " " << usr_info.digit << endl;
+}
+
+
+
+
+/************** MAIN *********************/
 int main()
 {
     in_fp.open(INPUT_FILE_NAME);
+    if (!in_fp) {
+        cout << "Error: Unable to open input file " << INPUT_FILE_NAME << endl;
+        return 1;
+    }
+
     out_fp.open(OUTPUT_FILE_NAME);
+    if (!out_fp) {
+        cout << "Error: Unable to open output file " << OUTPUT_FILE_NAME << endl;
+        in_fp.close();
+        return 1;
+    }
 
     doTask();
 
@@ -31,10 +81,16 @@ int main()
 }
 
 
-void doTask()
+void doTask()  
 {
+    /************** Instances *****************/
+    SignUp signup_instance;
+    Member_manager mem_manager_instacne;
+
     int menu_level_1 =0 , menu_level_2 =0;
-    int is_program_exit =0;
+    int is_program_exit = 0;
+
+    
 
     while(!is_program_exit)
     {
@@ -49,7 +105,7 @@ void doTask()
                     case 1:
                     {
                         /* 회원 가입 */
-
+                        signup_instance.signup();
                         break;
                     }
                 } // * switch(menu_level_2)
@@ -132,78 +188,4 @@ void doTask()
 
     } // * while(!is_program_exit)
 }
-
-/************* ALL CLASS DEF  ***************/
-
-typedef struct {
-    string name;
-    int pwd;
-    int digit;
-}info;
-
-
-class Customer
-{
-private:
-    string name;
-    int pwd;
-    int digit;
-    // * NOT YET * //
-public:
-    Customer(string name,int pwd, int digit);
-};
-
-class Member_manager
-{
-private:
-    // * NOT YET * //
-    int num_of_memebr=0;
-    Customer* member_list[10];
-    
-public:
-    void Add_New_Member(string name,int pwd,int digit)
-    {
-        Customer New_mem(name,pwd,digit);
-        this->member_list[this->num_of_memebr++] = &New_mem;
-    }
-}; // * Member
-
-
-
-class SignUpUI
-{
-private: 
-    // * NOT YET * //
-public:
-    info* get_info()
-    {
-        info* usr_info;
-        in_fp >> usr_info->name >> usr_info->pwd >> usr_info->digit;
-
-        return usr_info;
-    }
-}; // * SignUpUI
-
-
-
-class SignUp
-{
-private:
-    string Name;
-    int pwd;
-    int digit;
-
-    SignUpUI UI;
-    Member_manager member_manager;
-
-public:
-    void signup()
-    {
-        info* usr_info;
-
-        usr_info = UI.get_info();
-        member_manager.Add_New_Member(usr_info->name,usr_info->pwd,usr_info->digit);
-    }
-
-}; // * SignUp
 
