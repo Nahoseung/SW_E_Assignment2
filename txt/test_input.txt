@@ -1,5 +1,9 @@
-1 1 KIM pwdpwd 01011111111
+1 1 Kim pwdpwd 01011111111
 1 1 NA pwdpwd 01000000000
 3 1 b1 bikeMaker
 3 1 b2 bikeProducer
+2 1 kim pwdpwd
+4 1 b1
+4 1 b2
+5 1
 6 1

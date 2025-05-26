@@ -1,4 +1,9 @@
-KIM pwdpwd 01011111111
+Kim pwdpwd 01011111111
 NA pwdpwd 01000000000
+b1 bikeMaker
+b2 bikeProducer
+kim pwdpwd
+b1 bikeMaker
+b2 bikeProducer
 b1 bikeMaker
 b2 bikeProducer
