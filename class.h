@@ -53,6 +53,7 @@ class SignUpUI
 private:
 public:
     MemInfo getMemInfo();
+    void showMemInfo(MemInfo userInfo); 
 };
 
 class SignUp
@@ -70,6 +71,7 @@ class SignInUI
 private:
 public:
     MemInfo getUserInfo();
+    void showSignInResult(MemInfo userInfo); 
 };
 
 class SignIn
@@ -81,9 +83,17 @@ public:
     void signIn(MemberManager* memberManager);
 };
 
+class SignOutUI 
+{
+private:
+public:
+    void showSignOutInfo(string memberName); 
+};
+
 class SignOut
 {
 private:
+    SignOutUI signOutUI; 
 public:
     void signOut(MemberManager* memberManager);
 };
@@ -136,6 +146,7 @@ class RegisterBicycleUI
 private:
 public:
     BicycleInfo getBicycleInfo();
+    void showBicycleRegistrationInfo(BicycleInfo bikeInfo); 
 };
 
 class RegisterBicycle
@@ -153,6 +164,7 @@ class RentBicycleUI
 private:
 public:
     BicycleInfo getBicycleInfo();
+    void showRentalInfo(BicycleInfo bikeInfo); 
 };
 
 class RentBicycle
@@ -170,7 +182,7 @@ class GetMyListUI
 {
 private:
 public:
-    void showList(BicycleInfo myList[], int length);
+    void showList(BicycleInfo myList[], int length); 
 };
 
 class GetMyList

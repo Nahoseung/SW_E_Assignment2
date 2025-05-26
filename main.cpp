@@ -20,7 +20,7 @@ ifstream inputFile;
 
 /************* CLASS FUNCTIONS ***************/
 
-// * 회원 가입
+    // * 회원 가입
 void SignUp::signUp(MemberManager* memberManager)
 {
     MemInfo userInfo;
@@ -28,8 +28,8 @@ void SignUp::signUp(MemberManager* memberManager)
     userInfo = signUpUI.getMemInfo();
     memberManager->addNewMember(userInfo.name, userInfo.password, userInfo.phoneNumber);
 
-    cout << userInfo.name << userInfo.password << userInfo.phoneNumber << endl;
-    outputFile << userInfo.name << " " << userInfo.password << " " << userInfo.phoneNumber << endl;
+    signUpUI.showMemInfo(userInfo);
+    return;
 }
 
 MemInfo SignUpUI::getMemInfo()
@@ -48,7 +48,13 @@ void MemberManager::addNewMember(string name, string password, string phoneNumbe
     }
 }
 
-// * 로그인/로그아웃
+void SignUpUI::showMemInfo(MemInfo userInfo)
+{
+    cout << userInfo.name << userInfo.password << userInfo.phoneNumber << endl;
+    outputFile << userInfo.name << " " << userInfo.password << " " << userInfo.phoneNumber << endl;
+}
+
+    // * 로그인/로그아웃
 void SignIn::signIn(MemberManager* memberManager)
 {
     MemInfo userInfo;
@@ -56,8 +62,7 @@ void SignIn::signIn(MemberManager* memberManager)
     userInfo = signInUI.getUserInfo();
     memberManager->signIn(userInfo);
 
-    cout << userInfo.name << userInfo.password << endl;
-    outputFile << userInfo.name << " " << userInfo.password << endl;
+    signInUI.showSignInResult(userInfo); 
     return;
 }
 
@@ -69,10 +74,25 @@ MemInfo SignInUI::getUserInfo()
     return userInfo;
 }
 
+void SignInUI::showSignInResult(MemInfo userInfo) 
+{
+    cout << userInfo.name << userInfo.password << endl;
+    outputFile << userInfo.name << " " << userInfo.password << endl;
+    return;
+}
+
+
 void SignOut::signOut(MemberManager* memberManager)
 {
-    outputFile << memberManager->currentMember.name << endl;
+    string currentMemberName = memberManager->currentMember.name; 
     memberManager->signOut();
+    signOutUI.showSignOutInfo(currentMemberName); 
+    return;
+}
+
+void SignOutUI::showSignOutInfo(string memberName) 
+{
+    outputFile << memberName << endl;
     return;
 }
 
@@ -90,15 +110,15 @@ void MemberManager::signOut()
     return;
 }
 
-// * 자전거 등록
+    // * 자전거 등록
 void RegisterBicycle::registerBicycle(BicycleManager* bicycleManager)
 {
     BicycleInfo bikeInfo;
     bikeInfo = registerBicycleUI.getBicycleInfo();
     bicycleManager->addNewBicycle(bikeInfo.id, bikeInfo.name);
 
-    cout << bikeInfo.id << bikeInfo.name << endl;
-    outputFile << bikeInfo.id << " " << bikeInfo.name << endl;
+    registerBicycleUI.showBicycleRegistrationInfo(bikeInfo); 
+    return;
 }
 
 BicycleInfo RegisterBicycleUI::getBicycleInfo()
@@ -110,6 +130,13 @@ BicycleInfo RegisterBicycleUI::getBicycleInfo()
     return bikeInfo;
 }
 
+void RegisterBicycleUI::showBicycleRegistrationInfo(BicycleInfo bikeInfo) 
+{
+    cout << bikeInfo.id << bikeInfo.name << endl;
+    outputFile << bikeInfo.id << " " << bikeInfo.name << endl;
+    return;
+}
+
 void BicycleManager::addNewBicycle(string id, string name)
 {
     Bicycle newBike(id, name);
@@ -117,9 +144,10 @@ void BicycleManager::addNewBicycle(string id, string name)
     {
         this->bicycleList[this->numberOfBicycles++] = newBike;
     }
+    return;
 }
 
-// * 자전거 대여
+    // * 자전거 대여
 void RentBicycle::rental(MemberManager* memberManager, BicycleManager* bicycleManager)
 {
     BicycleInfo bikeInfo;
@@ -131,8 +159,8 @@ void RentBicycle::rental(MemberManager* memberManager, BicycleManager* bicycleMa
     bikeInfo.renter = memberInfo.name;
     bikeInfo = bicycleManager->rentBicycle(memberInfo, bikeInfo);
 
-    cout << bikeInfo.id << bikeInfo.name << endl;
-    outputFile << bikeInfo.id << " " << bikeInfo.name << endl;
+    rentBicycleUI.showRentalInfo(bikeInfo); 
+    return;
 }
 
 BicycleInfo BicycleManager::rentBicycle(MemInfo memberInfo, BicycleInfo bikeInfo)
@@ -159,14 +187,22 @@ BicycleInfo RentBicycleUI::getBicycleInfo()
     return bikeInfo;
 }
 
-// * 자전거 대여 리스트 조회
+void RentBicycleUI::showRentalInfo(BicycleInfo bikeInfo) 
+{
+    cout << bikeInfo.id << bikeInfo.name << endl;
+    outputFile << bikeInfo.id << " " << bikeInfo.name << endl;
+    return;
+}
+
+    // * 자전거 대여 리스트 조회
 void GetMyList::getMyList(MemberManager* memberManager, BicycleManager* bicycleManager)
 {
     MemInfo memberInfo;
     int len;
     memberInfo = memberManager->getCurrentUser();
     len = bicycleManager->getRentedList(this->myList, memberInfo);
-    getMyListUI.showList(this->myList, len);
+    getMyListUI.showList(this->myList, len); 
+    return;
 }
 
 void GetMyListUI::showList(BicycleInfo myList[], int length)
@@ -176,6 +212,7 @@ void GetMyListUI::showList(BicycleInfo myList[], int length)
         cout << myList[i].id << " " << myList[i].name << endl;
         outputFile << myList[i].id << " " << myList[i].name << endl;
     }
+    return;
 }
 
 int BicycleManager::getRentedList(BicycleInfo myList[], MemInfo memberInfo)
@@ -320,4 +357,5 @@ void doTask()
     }     // * while(!isProgramExit)
 
     cout << "LAST LOGIN USER : " << memberManagerInstance.currentMember.name << endl;
+    return;
 }
