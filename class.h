@@ -4,202 +4,181 @@
 #define MAX_NUM_OF_MEMBERS 10
 using namespace std;
 
-
-
-/************* 회원 가입  ***************/
-typedef struct {
+/************* 회원 가입 ***************/
+typedef struct
+{
     string name;
-    string pwd;
-    string digit;
-}mem_info;
+    string password;
+    string phoneNumber;
+} MemInfo;
 
-class Customer
+class Member
 {
 private:
-    mem_info M_info;
-    // * NOT YET * //
+    MemInfo memberInfo;
 
 public:
-    Customer()
+    Member()
     {
-        M_info.name = "";
-        M_info.pwd = "";
-        M_info.digit = "";
+        memberInfo.name = "";
+        memberInfo.password = "";
+        memberInfo.phoneNumber = "";
     }
 
-    Customer(string name,string pwd, string digit)
+    Member(string name, string password, string phoneNumber)
     {
-        this->M_info.name = name; 
-        this->M_info.pwd = pwd;
-        this->M_info.digit = digit;
+        this->memberInfo.name = name;
+        this->memberInfo.password = password;
+        this->memberInfo.phoneNumber = phoneNumber;
     }
 };
 
-//* Entity class를 이렇게 사용해도 되나 ?
-class Member_manager
+class MemberManager
 {
 private:
-    // * NOT YET * //
-    int num_of_memebr=0;
-    Customer member_list[MAX_NUM_OF_MEMBERS];
-    
+    int numberOfMembers = 0;
+    Member memberList[MAX_NUM_OF_MEMBERS];
+
 public:
-    mem_info curr_member;
+    MemInfo currentMember;
 
-    void Add_New_Member(string name,string pwd,string digit);
-    void signin(mem_info usr_info);
-    void signout();
-    mem_info get_curr_usr();
-}; // * Member
-
-
+    void addNewMember(string name, string password, string phoneNumber);
+    void signIn(MemInfo userInfo);
+    void signOut();
+    MemInfo getCurrentUser();
+};
 
 class SignUpUI
 {
-private: 
-    // * NOT YET * //
-    
+private:
 public:
-    mem_info get_mem_info();
-}; // * SignUpUI
-
-
+    MemInfo getMemInfo();
+};
 
 class SignUp
 {
 private:
-    SignUpUI UI;
+    SignUpUI signUpUI;
 
 public:
-    void signup(Member_manager* member_manager);
-}; // * SignUp
+    void signUp(MemberManager* memberManager);
+};
 
-/********* 로그인/로그 아웃 *********/
+/********* 로그인/로그아웃 *********/
 class SignInUI
 {
 private:
-
 public:
-    mem_info get_usr_info();
+    MemInfo getUserInfo();
 };
-
 
 class SignIn
 {
 private:
-    SignInUI UI;
+    SignInUI signInUI;
 
-public: 
-    void signin(Member_manager* member_manager);
+public:
+    void signIn(MemberManager* memberManager);
 };
 
 class SignOut
 {
 private:
-
 public:
-    void signout(Member_manager* member_manager);
+    void signOut(MemberManager* memberManager);
 };
 
-
 /********* 자전거 등록 *********/
-
-typedef struct {
-    string ID;
+typedef struct
+{
+    string id;
     string name;
     string renter;
-}bicycle_info;
+} BicycleInfo;
 
 class Bicycle
 {
 private:
-    
-    // * NOT YET * //
-
+    BicycleInfo bikeInfo;
 public:
-    bicycle_info B_info; // * Getter,setter 설정 필요
     Bicycle()
     {
-        B_info.ID="";
-        B_info.name="";
+        bikeInfo.id = "";
+        bikeInfo.name = "";
     }
 
-    Bicycle(string ID,string name)
+    Bicycle(string id, string name)
     {
-        this->B_info.ID = ID; 
-        this->B_info.name = name;
+        this->bikeInfo.id = id;
+        this->bikeInfo.name = name;
     }
+
+    string getId() const { return bikeInfo.id; }
+    string getName() const { return bikeInfo.name; }
+    string getRenter() const { return bikeInfo.renter; }
+    void setRenter(string renterName) { bikeInfo.renter = renterName; }
+    BicycleInfo getBicycleInfo() const {return bikeInfo;}
 };
 
-class Bicycle_manager
+class BicycleManager
 {
 private:
-    int num_of_Bicycle=0;
-    Bicycle bicycle_list[50];
-
-    /*NOT YET*/
+    int numberOfBicycles = 0;
+    Bicycle bicycleList[50];
 public:
-    int num_of_renataled_Bicycle =0;
-    bicycle_info rentaled_Bicycle[50];
-    
-    void Add_New_Bicycle(string ID,string name);
-    bicycle_info Rent_Bicycle(bicycle_info B_info);
+    void addNewBicycle(string id, string name);
+    BicycleInfo rentBicycle(MemInfo memberInfo, BicycleInfo bikeInfo);
+    int getRentedList(BicycleInfo myList[], MemInfo memberInfo);
 };
 
-class RegisterUI
+class RegisterBicycleUI
 {
 private:
-    /*NOT YET*/
 public:
-    bicycle_info get_bicycle_info();
+    BicycleInfo getBicycleInfo();
 };
 
-class Register
+class RegisterBicycle
 {
 private:
-    /*NOT YET*/
-    RegisterUI UI;
-    // Bicycle_manager bicycle_manager;
+    RegisterBicycleUI registerBicycleUI;
 
 public:
-    void regist(Bicycle_manager* bicycle_manager);
+    void registerBicycle(BicycleManager* bicycleManager);
 };
-
 
 /********* 자전거 대여 *********/
-class RentUI
+class RentBicycleUI
 {
 private:
-
 public:
-    bicycle_info get_Bicycle_info();
+    BicycleInfo getBicycleInfo();
 };
 
-
-class Rent
+class RentBicycle
 {
 private:
-    RentUI UI;
-public:
-    void Rental(Member_manager* member_manager, Bicycle_manager* bicycle_manager);
-};
+    RentBicycleUI rentBicycleUI;
 
+public:
+    void rental(MemberManager* memberManager, BicycleManager* bicycleManager);
+};
 
 /********* 대여 중인 자전거 리스트 조회 *********/
 
-class Get_my_listUI
+class GetMyListUI
 {
 private:
-
 public:
-    void Show_list(bicycle_info my_list[],int len);
+    void showList(BicycleInfo myList[], int length);
 };
 
-class Get_my_list
+class GetMyList
 {
 private:
-    Get_my_listUI UI;
-public: 
-    bicycle_info my_list [50];
-    void get_rentaled_list(Member_manager* member_manager, Bicycle_manager* bicycle_manager);
+    GetMyListUI getMyListUI;
+
+public:
+    BicycleInfo myList[50];
+    void getMyList(MemberManager* memberManager, BicycleManager* bicycleManager);
 };

@@ -4,5 +4,7 @@ b2 bikeProducer
 admin
 kim pwdpwd 01011111111
 kim pwdpwd
+b2 bikeProducer
 b1 bikeMaker
 b1 bikeMaker
+b2 bikeProducer

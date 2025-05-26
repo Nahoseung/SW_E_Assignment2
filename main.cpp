@@ -1,9 +1,9 @@
 #include "class.h"
 
 #define MAX_STRING 32
-#define test 0
+#define TEST 0
 
-#if test
+#if TEST
 #define INPUT_FILE_NAME "txt/test_input.txt"
 #define OUTPUT_FILE_NAME "txt/test_output.txt"
 
@@ -12,330 +12,325 @@
 #define OUTPUT_FILE_NAME "txt/output.txt"
 #endif
 
-
-
 void doTask();
-void join();
 void program_exit();
 
-ofstream out_fp;
-ifstream in_fp;
+ofstream outFile;
+ifstream inFile;
 
 /************* CLASS FUNCTIONS ***************/
 
-    /*회원 가입*/
-void SignUp::signup(Member_manager* member_manager)
+// 회원 가입
+void SignUp::signUp(MemberManager* memberManager)
 {
-    mem_info usr_info;
-        
-    usr_info = UI.get_mem_info();
-    member_manager->Add_New_Member(usr_info.name,usr_info.pwd,usr_info.digit);
+    MemInfo userInfo;
 
-    cout << usr_info.name << usr_info.pwd << usr_info.digit<<endl;
-    out_fp << usr_info.name << " " << usr_info.pwd << " " << usr_info.digit << endl;
+    userInfo = signUpUI.getMemInfo();
+    memberManager->addNewMember(userInfo.name, userInfo.password, userInfo.phoneNumber);
+
+    cout << userInfo.name << userInfo.password << userInfo.phoneNumber << endl;
+    outFile << userInfo.name << " " << userInfo.password << " " << userInfo.phoneNumber << endl;
 }
 
-mem_info SignUpUI::get_mem_info()
+MemInfo SignUpUI::getMemInfo()
 {
-    mem_info usr_info;
-    in_fp >> usr_info.name >> usr_info.pwd >> usr_info.digit;
-    return usr_info;
+    MemInfo userInfo;
+    inFile >> userInfo.name >> userInfo.password >> userInfo.phoneNumber;
+    return userInfo;
 }
 
-void Member_manager::Add_New_Member(string name,string pwd,string digit)
+void MemberManager::addNewMember(string name, string password, string phoneNumber)
 {
-    Customer New_mem(name,pwd,digit);
-    if(num_of_memebr<10)
+    Member newMember(name, password, phoneNumber);
+    if (numberOfMembers < MAX_NUM_OF_MEMBERS)
     {
-        this->member_list[this->num_of_memebr++] = New_mem;
-    }      
-}
-    /*로그인/로그아웃*/
-void SignIn::signin(Member_manager* member_manager)
-{
-    mem_info usr_info;
-
-    usr_info = UI.get_usr_info();
-    member_manager->signin(usr_info);
-
-    cout << usr_info.name << usr_info.pwd <<endl;
-    out_fp << usr_info.name << " " << usr_info.pwd << endl;
-    return;
-}
-
-mem_info SignInUI::get_usr_info()
-{
-    mem_info usr_info;
-    in_fp >> usr_info.name >> usr_info.pwd;
-
-    return usr_info;
-}
-
-void SignOut::signout(Member_manager* member_manager)
-{
-    out_fp << member_manager->curr_member.name << endl;
-    member_manager->signout();
-    return;
-}
-
-
-void Member_manager::signin(mem_info usr_info)
-{
-    this->curr_member = usr_info;
-    return;
-}
-
-
-void Member_manager::signout()
-{
-    this->curr_member.name = "NULL";
-    this->curr_member.pwd = "NULL";
-    this->curr_member.digit = "NULL";
-    return;
-}
-
-    /*자전거 등록*/
-void Register::regist(Bicycle_manager* bicycle_manager)
-{
-    bicycle_info b_info;
-    b_info = UI.get_bicycle_info();
-    bicycle_manager->Add_New_Bicycle(b_info.ID, b_info.name);
-
-    cout << b_info.ID << b_info.name <<endl;
-    out_fp << b_info.ID << " "<< b_info.name << endl;
-}
-
-bicycle_info RegisterUI::get_bicycle_info()
-{
-    bicycle_info b_info;
-    in_fp >> b_info.ID >> b_info.name;
-    b_info.renter="NULL";
-
-    return b_info;
-}
-
-void Bicycle_manager::Add_New_Bicycle(string ID,string name)
-{
-    Bicycle New_B(ID,name);
-    if(num_of_Bicycle<50)
-    {
-        this->bicycle_list[this->num_of_Bicycle++] = New_B;
+        this->memberList[this->numberOfMembers++] = newMember;
     }
 }
 
-    /*자전거 대여*/
-void Rent::Rental(Member_manager* member_manager, Bicycle_manager* bicycle_manager)
+// 로그인/로그아웃
+void SignIn::signIn(MemberManager* memberManager)
 {
-    bicycle_info B_info;
-    mem_info M_info;
+    MemInfo userInfo;
 
-    B_info = UI.get_Bicycle_info();
-    M_info = member_manager->get_curr_usr();
-    B_info.renter = M_info.name;
-    B_info = bicycle_manager->Rent_Bicycle(B_info);
+    userInfo = signInUI.getUserInfo();
+    memberManager->signIn(userInfo);
 
-    cout << B_info.ID << B_info.name <<endl;
-    out_fp << B_info.ID << " "<< B_info.name << endl;
+    cout << userInfo.name << userInfo.password << endl;
+    outFile << userInfo.name << " " << userInfo.password << endl;
+    return;
 }
 
-bicycle_info Bicycle_manager::Rent_Bicycle(bicycle_info B_info)
+MemInfo SignInUI::getUserInfo()
 {
-    if(num_of_renataled_Bicycle<50)
-    {
-        int i=0;
-        while(B_info.ID != bicycle_list[i].B_info.ID) i++;
+    MemInfo userInfo;
+    inFile >> userInfo.name >> userInfo.password;
 
-        B_info.name = bicycle_list[i].B_info.name;
-        this->rentaled_Bicycle[num_of_renataled_Bicycle++]=B_info;
+    return userInfo;
+}
+
+void SignOut::signOut(MemberManager* memberManager)
+{
+    outFile << memberManager->currentMember.name << endl;
+    memberManager->signOut();
+    return;
+}
+
+void MemberManager::signIn(MemInfo userInfo)
+{
+    this->currentMember = userInfo;
+    return;
+}
+
+void MemberManager::signOut()
+{
+    this->currentMember.name = "NULL";
+    this->currentMember.password = "NULL";
+    this->currentMember.phoneNumber = "NULL";
+    return;
+}
+
+// 자전거 등록
+void RegisterBicycle::registerBicycle(BicycleManager* bicycleManager)
+{
+    BicycleInfo bikeInfo;
+    bikeInfo = registerBicycleUI.getBicycleInfo();
+    bicycleManager->addNewBicycle(bikeInfo.id, bikeInfo.name);
+
+    cout << bikeInfo.id << bikeInfo.name << endl;
+    outFile << bikeInfo.id << " " << bikeInfo.name << endl;
+}
+
+BicycleInfo RegisterBicycleUI::getBicycleInfo()
+{
+    BicycleInfo bikeInfo;
+    inFile >> bikeInfo.id >> bikeInfo.name;
+    bikeInfo.renter = "NULL";
+
+    return bikeInfo;
+}
+
+void BicycleManager::addNewBicycle(string id, string name)
+{
+    Bicycle newBike(id, name);
+    if (numberOfBicycles < 50)
+    {
+        this->bicycleList[this->numberOfBicycles++] = newBike;
     }
-
-    return B_info;
-}
-mem_info Member_manager::get_curr_usr()
-{
-    return this->curr_member;
-}
-bicycle_info RentUI::get_Bicycle_info()
-{
-    bicycle_info B_info;
-    in_fp >> B_info.ID;
-    return B_info;
 }
 
-    /* 자전거 대여 리스트 조회 */
-    
-void Get_my_list::get_rentaled_list(Member_manager* member_manager, Bicycle_manager* bicycle_manager)
+// 자전거 대여
+void RentBicycle::rental(MemberManager* memberManager, BicycleManager* bicycleManager)
 {
-    mem_info M_info;
-    int j=0;
-    M_info = member_manager->get_curr_usr();
-    
-    for(int i=0; i< bicycle_manager->num_of_renataled_Bicycle; i++)
+    BicycleInfo bikeInfo;
+    MemInfo memberInfo;
+
+    bikeInfo = rentBicycleUI.getBicycleInfo();
+    memberInfo = memberManager->getCurrentUser();
+
+    bikeInfo.renter = memberInfo.name;
+    bikeInfo = bicycleManager->rentBicycle(memberInfo, bikeInfo);
+
+    cout << bikeInfo.id << bikeInfo.name << endl;
+    outFile << bikeInfo.id << " " << bikeInfo.name << endl;
+}
+
+BicycleInfo BicycleManager::rentBicycle(MemInfo memberInfo, BicycleInfo bikeInfo)
+{
+    int i = 0;
+    while (bikeInfo.id != bicycleList[i].getId()) i++;
+
+    bikeInfo.name = bicycleList[i].getName();
+
+    bicycleList[i].setRenter(memberInfo.name);
+
+    return bikeInfo;
+}
+
+MemInfo MemberManager::getCurrentUser()
+{
+    return this->currentMember;
+}
+
+BicycleInfo RentBicycleUI::getBicycleInfo()
+{
+    BicycleInfo bikeInfo;
+    inFile >> bikeInfo.id;
+    return bikeInfo;
+}
+
+// 자전거 대여 리스트 조회
+void GetMyList::getMyList(MemberManager* memberManager, BicycleManager* bicycleManager)
+{
+    MemInfo memberInfo;
+    int len;
+    memberInfo = memberManager->getCurrentUser();
+    len = bicycleManager->getRentedList(this->myList, memberInfo);
+    getMyListUI.showList(this->myList, len);
+}
+
+void GetMyListUI::showList(BicycleInfo myList[], int length)
+{
+    for (int i = 0; i < length; i++)
     {
-        // cout<< M_info.name << " : " << bicycle_manager->rentaled_Bicycle[i].name << "(" << bicycle_manager->rentaled_Bicycle[i].
-        if(M_info.name == bicycle_manager->rentaled_Bicycle[i].renter)
+        cout << myList[i].id << " " << myList[i].name << endl;
+        outFile << myList[i].id << " " << myList[i].name << endl;
+    }
+}
+
+int BicycleManager::getRentedList(BicycleInfo myList[], MemInfo memberInfo)
+{
+    int len = 0;
+    for (int i = 0; i < this->numberOfBicycles; i++)
+    {
+        if (memberInfo.name == this->bicycleList[i].getRenter())
         {
-            this->my_list[j++] = bicycle_manager->rentaled_Bicycle[i];
+            myList[len++] = this->bicycleList[i].getBicycleInfo();
         }
     }
-    UI.Show_list(this->my_list,j);
-}
-
-void Get_my_listUI::Show_list(bicycle_info my_list[],int len)
-{
-    for(int i=0; i<len; i++)
-    {
-        cout << my_list[i].ID << " "<< my_list[i].name << endl;
-        out_fp << my_list[i].ID << " "<< my_list[i].name << endl;
-    }
+    cout<<len<<endl;
+    return len;
 }
 
 /****************** MAIN *********************/
 int main()
 {
-    in_fp.open(INPUT_FILE_NAME);
-    if (!in_fp) {
+    inFile.open(INPUT_FILE_NAME);
+    if (!inFile)
+    {
         cout << "Error: Unable to open input file " << INPUT_FILE_NAME << endl;
         return 1;
     }
 
-    out_fp.open(OUTPUT_FILE_NAME);
-    if (!out_fp) {
+    outFile.open(OUTPUT_FILE_NAME);
+    if (!outFile)
+    {
         cout << "Error: Unable to open output file " << OUTPUT_FILE_NAME << endl;
-        in_fp.close();
+        inFile.close();
         return 1;
     }
 
     doTask();
 
-    out_fp.close();
-    in_fp.close();
+    outFile.close();
+    inFile.close();
 
     return 0;
 }
 
-
-void doTask()  
+void doTask()
 {
     /************** CONTROL CLASS Instances *****************/
-    SignUp signup_instance;
-    SignIn signin_instance;
-    SignOut signout_instance;
-    Register register_instance;
-    Rent Rent_instance;
-    Get_my_list get_my_list_instance;
+    SignUp signUpInstance;
+    SignIn signInInstance;
+    SignOut signOutInstance;
+    RegisterBicycle registerBicycleInstance;
+    RentBicycle rentBicycleInstance;
+    GetMyList getMyListInstance;
     /************** Entity CLASS Instances *****************/
-    Member_manager mem_manager_instacne;
-    Bicycle_manager B_manager_instance;
+    MemberManager memberManagerInstance;
+    BicycleManager bicycleManagerInstance;
 
+    int menuLevel1 = 0, menuLevel2 = 0;
+    int isProgramExit = 0;
 
-    int menu_level_1 =0 , menu_level_2 =0;
-    int is_program_exit = 0;
-
-    
-
-    while(!is_program_exit)
+    while (!isProgramExit)
     {
-        in_fp >> menu_level_1 >> menu_level_2 ;
-        
-        switch(menu_level_1)
+        inFile >> menuLevel1 >> menuLevel2;
+
+        switch (menuLevel1)
         {
+        case 1:
+        {
+            switch (menuLevel2)
+            {
             case 1:
             {
-                switch(menu_level_2)
-                {
-                    case 1:
-                    {
-                        /* 회원 가입 */
-                        signup_instance.signup(&mem_manager_instacne);
-                        break;
-                    }
-                } // * switch(menu_level_2)
+                // Member Registration
+                signUpInstance.signUp(&memberManagerInstance);
                 break;
-            } // * case 1
+            }
+            } // * switch(menuLevel2)
+            break;
+        } // * case 1
+
+        case 2:
+        {
+            switch (menuLevel2)
+            {
+            case 1:
+            {
+                // Login
+                signInInstance.signIn(&memberManagerInstance);
+                break;
+            }
 
             case 2:
             {
-                switch(menu_level_2)
-                {
-                    case 1: 
-                    {
-                        /* 로그인 */
-                        signin_instance.signin(&mem_manager_instacne);
-                        break;
-                    }
-
-                    case 2:
-                    {
-                        /* 로그 아웃 */
-                        signout_instance.signout(&mem_manager_instacne);
-                        break;
-                    }
-                } // * switch(menu_level_2)
+                // Logout
+                signOutInstance.signOut(&memberManagerInstance);
                 break;
-            } // * case 2
+            }
+            } // * switch(menuLevel2)
+            break;
+        } // * case 2
 
-            case 3:
+        case 3:
+        {
+            switch (menuLevel2)
             {
-                switch(menu_level_2)
-                {
-                    case 1:
-                    {
-                        /* 자전거 등록 */
-                        register_instance.regist(&B_manager_instance);
-                        break;
-                    }
-                } // * switch(menu_level_2)
+            case 1:
+            {
+                // Bicycle Registration
+                registerBicycleInstance.registerBicycle(&bicycleManagerInstance);
                 break;
-            } // * case 3
+            }
+            } // * switch(menuLevel2)
+            break;
+        } // * case 3
 
-            case 4:
+        case 4:
+        {
+            switch (menuLevel2)
             {
-                switch(menu_level_2)
-                {
-                    case 1:
-                    {
-                        /* 자전거 대여 */
-                        Rent_instance.Rental(&mem_manager_instacne, &B_manager_instance);
-                        break;
-                    }
-                } // * switch(menu_level_2)
+            case 1:
+            {
+                // Bicycle Rental
+                rentBicycleInstance.rental(&memberManagerInstance, &bicycleManagerInstance);
                 break;
-            } // * case 4
+            }
+            } // * switch(menuLevel2)
+            break;
+        } // * case 4
 
-            case 5:
+        case 5:
+        {
+            switch (menuLevel2)
             {
-                switch(menu_level_2)
-                {
-                    case 1:
-                    {
-                        /* 대여 중인 자전거 리스트 조회 */
-                        get_my_list_instance.get_rentaled_list(&mem_manager_instacne,&B_manager_instance);
-                        break;
-                    }
-                } // * switch(menu_level_2)
+            case 1:
+            {
+                // View Rented Bicycle List
+                getMyListInstance.getMyList(&memberManagerInstance, &bicycleManagerInstance);
                 break;
-            } // * case 5
+            }
+            } // * switch(menuLevel2)
+            break;
+        } // * case 5
 
-            case 6:
+        case 6:
+        {
+            switch (menuLevel2)
             {
-                switch(menu_level_2)
-                {
-                    case 1:
-                    {
-                        /* 프로그램 종료 */
+            case 1:
+            {
+                // Program Exit
+                isProgramExit = 1;
+                break;
+            }
+            } // * switch(menuLevel2)
+        } // * case 6
+        } // * switch(menuLevel1)
+    }     // * while(!isProgramExit)
 
-                        is_program_exit = 1;
-                        break;
-                    }
-                } // * switch(menu_level_2)
-            } // * case 6
-
-        } // * switch(menu_level_1)
-
-    } // * while(!is_program_exit)
-
-
-    cout<<"LAST LOGIN USER : "<<mem_manager_instacne.curr_member.name << endl;
+    cout << "LAST LOGIN USER : " << memberManagerInstance.currentMember.name << endl;
 }
-
