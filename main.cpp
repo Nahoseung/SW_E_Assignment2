@@ -15,12 +15,12 @@
 void doTask();
 void program_exit();
 
-ofstream outFile;
-ifstream inFile;
+ofstream outputFile;
+ifstream inputFile;
 
 /************* CLASS FUNCTIONS ***************/
 
-// 회원 가입
+// * 회원 가입
 void SignUp::signUp(MemberManager* memberManager)
 {
     MemInfo userInfo;
@@ -29,13 +29,13 @@ void SignUp::signUp(MemberManager* memberManager)
     memberManager->addNewMember(userInfo.name, userInfo.password, userInfo.phoneNumber);
 
     cout << userInfo.name << userInfo.password << userInfo.phoneNumber << endl;
-    outFile << userInfo.name << " " << userInfo.password << " " << userInfo.phoneNumber << endl;
+    outputFile << userInfo.name << " " << userInfo.password << " " << userInfo.phoneNumber << endl;
 }
 
 MemInfo SignUpUI::getMemInfo()
 {
     MemInfo userInfo;
-    inFile >> userInfo.name >> userInfo.password >> userInfo.phoneNumber;
+    inputFile >> userInfo.name >> userInfo.password >> userInfo.phoneNumber;
     return userInfo;
 }
 
@@ -48,7 +48,7 @@ void MemberManager::addNewMember(string name, string password, string phoneNumbe
     }
 }
 
-// 로그인/로그아웃
+// * 로그인/로그아웃
 void SignIn::signIn(MemberManager* memberManager)
 {
     MemInfo userInfo;
@@ -57,21 +57,21 @@ void SignIn::signIn(MemberManager* memberManager)
     memberManager->signIn(userInfo);
 
     cout << userInfo.name << userInfo.password << endl;
-    outFile << userInfo.name << " " << userInfo.password << endl;
+    outputFile << userInfo.name << " " << userInfo.password << endl;
     return;
 }
 
 MemInfo SignInUI::getUserInfo()
 {
     MemInfo userInfo;
-    inFile >> userInfo.name >> userInfo.password;
+    inputFile >> userInfo.name >> userInfo.password;
 
     return userInfo;
 }
 
 void SignOut::signOut(MemberManager* memberManager)
 {
-    outFile << memberManager->currentMember.name << endl;
+    outputFile << memberManager->currentMember.name << endl;
     memberManager->signOut();
     return;
 }
@@ -90,7 +90,7 @@ void MemberManager::signOut()
     return;
 }
 
-// 자전거 등록
+// * 자전거 등록
 void RegisterBicycle::registerBicycle(BicycleManager* bicycleManager)
 {
     BicycleInfo bikeInfo;
@@ -98,13 +98,13 @@ void RegisterBicycle::registerBicycle(BicycleManager* bicycleManager)
     bicycleManager->addNewBicycle(bikeInfo.id, bikeInfo.name);
 
     cout << bikeInfo.id << bikeInfo.name << endl;
-    outFile << bikeInfo.id << " " << bikeInfo.name << endl;
+    outputFile << bikeInfo.id << " " << bikeInfo.name << endl;
 }
 
 BicycleInfo RegisterBicycleUI::getBicycleInfo()
 {
     BicycleInfo bikeInfo;
-    inFile >> bikeInfo.id >> bikeInfo.name;
+    inputFile >> bikeInfo.id >> bikeInfo.name;
     bikeInfo.renter = "NULL";
 
     return bikeInfo;
@@ -119,7 +119,7 @@ void BicycleManager::addNewBicycle(string id, string name)
     }
 }
 
-// 자전거 대여
+// * 자전거 대여
 void RentBicycle::rental(MemberManager* memberManager, BicycleManager* bicycleManager)
 {
     BicycleInfo bikeInfo;
@@ -132,7 +132,7 @@ void RentBicycle::rental(MemberManager* memberManager, BicycleManager* bicycleMa
     bikeInfo = bicycleManager->rentBicycle(memberInfo, bikeInfo);
 
     cout << bikeInfo.id << bikeInfo.name << endl;
-    outFile << bikeInfo.id << " " << bikeInfo.name << endl;
+    outputFile << bikeInfo.id << " " << bikeInfo.name << endl;
 }
 
 BicycleInfo BicycleManager::rentBicycle(MemInfo memberInfo, BicycleInfo bikeInfo)
@@ -155,11 +155,11 @@ MemInfo MemberManager::getCurrentUser()
 BicycleInfo RentBicycleUI::getBicycleInfo()
 {
     BicycleInfo bikeInfo;
-    inFile >> bikeInfo.id;
+    inputFile >> bikeInfo.id;
     return bikeInfo;
 }
 
-// 자전거 대여 리스트 조회
+// * 자전거 대여 리스트 조회
 void GetMyList::getMyList(MemberManager* memberManager, BicycleManager* bicycleManager)
 {
     MemInfo memberInfo;
@@ -174,7 +174,7 @@ void GetMyListUI::showList(BicycleInfo myList[], int length)
     for (int i = 0; i < length; i++)
     {
         cout << myList[i].id << " " << myList[i].name << endl;
-        outFile << myList[i].id << " " << myList[i].name << endl;
+        outputFile << myList[i].id << " " << myList[i].name << endl;
     }
 }
 
@@ -188,32 +188,19 @@ int BicycleManager::getRentedList(BicycleInfo myList[], MemInfo memberInfo)
             myList[len++] = this->bicycleList[i].getBicycleInfo();
         }
     }
-    cout<<len<<endl;
     return len;
 }
 
 /****************** MAIN *********************/
 int main()
 {
-    inFile.open(INPUT_FILE_NAME);
-    if (!inFile)
-    {
-        cout << "Error: Unable to open input file " << INPUT_FILE_NAME << endl;
-        return 1;
-    }
-
-    outFile.open(OUTPUT_FILE_NAME);
-    if (!outFile)
-    {
-        cout << "Error: Unable to open output file " << OUTPUT_FILE_NAME << endl;
-        inFile.close();
-        return 1;
-    }
+    inputFile.open(INPUT_FILE_NAME);
+    outputFile.open(OUTPUT_FILE_NAME);
 
     doTask();
 
-    outFile.close();
-    inFile.close();
+    outputFile.close();
+    inputFile.close();
 
     return 0;
 }
@@ -236,7 +223,7 @@ void doTask()
 
     while (!isProgramExit)
     {
-        inFile >> menuLevel1 >> menuLevel2;
+        inputFile >> menuLevel1 >> menuLevel2;
 
         switch (menuLevel1)
         {
@@ -246,7 +233,7 @@ void doTask()
             {
             case 1:
             {
-                // Member Registration
+                // * 회원가입
                 signUpInstance.signUp(&memberManagerInstance);
                 break;
             }
@@ -260,14 +247,14 @@ void doTask()
             {
             case 1:
             {
-                // Login
+                // * 로그인
                 signInInstance.signIn(&memberManagerInstance);
                 break;
             }
 
             case 2:
             {
-                // Logout
+                // * 로그 아웃
                 signOutInstance.signOut(&memberManagerInstance);
                 break;
             }
@@ -281,7 +268,7 @@ void doTask()
             {
             case 1:
             {
-                // Bicycle Registration
+                // * 자전거 등록
                 registerBicycleInstance.registerBicycle(&bicycleManagerInstance);
                 break;
             }
@@ -295,7 +282,7 @@ void doTask()
             {
             case 1:
             {
-                // Bicycle Rental
+                // * 자전거 대여
                 rentBicycleInstance.rental(&memberManagerInstance, &bicycleManagerInstance);
                 break;
             }
@@ -309,7 +296,7 @@ void doTask()
             {
             case 1:
             {
-                // View Rented Bicycle List
+                // * 대여 중인 자전거 리스트 조회
                 getMyListInstance.getMyList(&memberManagerInstance, &bicycleManagerInstance);
                 break;
             }
